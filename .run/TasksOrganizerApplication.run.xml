@@ -1,0 +1,9 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="TasksOrganizerApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+    <module name="tasks_organizer" />
+    <option name="SPRING_BOOT_MAIN_CLASS" value="io.github.umbrellaleaf5.tasks_organizer.TasksOrganizerApplication" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
