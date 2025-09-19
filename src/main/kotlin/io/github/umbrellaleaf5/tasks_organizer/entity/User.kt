@@ -20,5 +20,7 @@ data class User(
   @Column(nullable = false)
   val name: String
 ) {
+  constructor() : this(null, "", "")
+
   override fun toString() = "User(id=$id, shortName='$shortName')"
 }

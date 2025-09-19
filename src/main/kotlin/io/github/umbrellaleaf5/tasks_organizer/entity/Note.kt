@@ -26,7 +26,9 @@ data class Note(
 
   @ManyToOne(fetch = FetchType.LAZY, optional = false)
   @JoinColumn(name = "author_id", nullable = false)
-  val author: User
+  val author: User? = null,
 ) {
+  constructor() : this(null, "", "", Instant.now(), null)
+
   override fun toString() = "Note(id=$id, title='$title')"
 }

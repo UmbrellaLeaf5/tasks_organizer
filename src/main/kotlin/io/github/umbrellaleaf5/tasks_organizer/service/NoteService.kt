@@ -66,7 +66,7 @@ class NoteService(
   private fun Note.toResponse(): NoteResponse {
     return NoteResponse(
       id = id!!,
-      authorId = author.id!!,
+      authorId = author!!.id!!,
       title = title,
       text = text,
       createdAt = createdAt
