@@ -3,6 +3,7 @@ package io.github.umbrellaleaf5.tasks_organizer.controller
 import io.github.umbrellaleaf5.tasks_organizer.dto.request.UserCreateRequest
 import io.github.umbrellaleaf5.tasks_organizer.dto.request.UserUpdateRequest
 import io.github.umbrellaleaf5.tasks_organizer.dto.response.UserResponse
+import io.github.umbrellaleaf5.tasks_organizer.exception.NotFoundException
 import io.github.umbrellaleaf5.tasks_organizer.service.UserService
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
@@ -18,7 +19,7 @@ class UserController(
   @ResponseStatus(HttpStatus.OK)
   fun getUsers(@RequestParam(name = "id", required = false) userId: Long?): Any {
     return if (userId != null) {
-      userService.getUserById(userId) ?: throw IllegalArgumentException("User not found")
+      userService.getUserById(userId) ?: throw NotFoundException("User with id $userId not found")
     } else {
       userService.getAllUsers()
     }

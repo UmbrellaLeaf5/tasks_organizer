@@ -3,6 +3,8 @@ package io.github.umbrellaleaf5.tasks_organizer.controller
 import io.github.umbrellaleaf5.tasks_organizer.dto.request.NoteCreateRequest
 import io.github.umbrellaleaf5.tasks_organizer.dto.request.NoteUpdateRequest
 import io.github.umbrellaleaf5.tasks_organizer.dto.response.NoteResponse
+import io.github.umbrellaleaf5.tasks_organizer.exception.BadRequestException
+import io.github.umbrellaleaf5.tasks_organizer.exception.NotFoundException
 import io.github.umbrellaleaf5.tasks_organizer.service.NoteService
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
@@ -23,7 +25,7 @@ class NoteController(
   ): Any {
     return when {
       noteId != null -> noteService.getNoteById(noteId)
-        ?: throw IllegalArgumentException("Note not found")
+        ?: throw NotFoundException("Note with id $noteId not found")
 
       searchQuery != null -> {
         if (authorId != null) {
@@ -34,7 +36,7 @@ class NoteController(
       }
 
       authorId != null -> noteService.getNotesByAuthorId(authorId)
-      else -> throw IllegalArgumentException("Invalid search query param")
+      else -> throw BadRequestException("Invalid search query param")
     }
   }
 

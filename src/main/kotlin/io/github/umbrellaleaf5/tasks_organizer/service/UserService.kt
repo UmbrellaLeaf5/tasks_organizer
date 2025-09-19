@@ -35,7 +35,6 @@ class UserService(
   @Transactional
   fun updateUser(userId: Long, request: UserUpdateRequest): UserResponse {
     val existingUser = userRepository.findByIdOrNull(userId)
-      ?: throw IllegalArgumentException("User with id $userId not found")
 
     val updatedUser = User(
       id = userId,

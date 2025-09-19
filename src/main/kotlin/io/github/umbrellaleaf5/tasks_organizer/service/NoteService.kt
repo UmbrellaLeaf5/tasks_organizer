@@ -15,6 +15,7 @@ class NoteService(
   private val noteRepository: NoteRepository,
   private val userRepository: UserRepository
 ) {
+
   fun getNotesByAuthorId(authorId: Long): List<NoteResponse> {
     return noteRepository.findAllByAuthorId(authorId).map { it.toResponse() }
   }
@@ -27,7 +28,6 @@ class NoteService(
     }
   }
 
-
   fun getNoteById(noteId: Long): NoteResponse? {
     return noteRepository.findByIdOrNull(noteId)?.toResponse()
   }
@@ -35,8 +35,7 @@ class NoteService(
   @Transactional
   fun createNote(authorId: Long, request: NoteCreateRequest): NoteResponse {
     val author = userRepository.findByIdOrNull(authorId)
-      ?: throw IllegalArgumentException("User with id $authorId not found")
-
+    
     val note = Note(
       title = request.title,
       text = request.text,
@@ -49,7 +48,6 @@ class NoteService(
   @Transactional
   fun updateNote(noteId: Long, request: NoteUpdateRequest): NoteResponse {
     val existingNote = noteRepository.findByIdOrNull(noteId)
-      ?: throw IllegalArgumentException("Note with id $noteId not found")
 
     val updatedNote = Note(
       id = noteId,
