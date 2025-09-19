@@ -15,14 +15,18 @@ class NoteService(
   private val noteRepository: NoteRepository,
   private val userRepository: UserRepository
 ) {
-
   fun getNotesByAuthorId(authorId: Long): List<NoteResponse> {
     return noteRepository.findAllByAuthorId(authorId).map { it.toResponse() }
   }
 
-  fun searchNotes(query: String, authorId: Long): List<NoteResponse> {
-    return noteRepository.findBySearchQueryAndAuthorId(query, authorId).map { it.toResponse() }
+  fun searchNotes(query: String, authorId: Long? = null): List<NoteResponse> {
+    return if (authorId != null) {
+      noteRepository.findBySearchQueryAndAuthorId(query, authorId).map { it.toResponse() }
+    } else {
+      noteRepository.findBySearchQuery(query).map { it.toResponse() }
+    }
   }
+
 
   fun getNoteById(noteId: Long): NoteResponse? {
     return noteRepository.findByIdOrNull(noteId)?.toResponse()
@@ -66,7 +70,7 @@ class NoteService(
   private fun Note.toResponse(): NoteResponse {
     return NoteResponse(
       id = id!!,
-      authorId = author!!.id!!,
+      authorId = author?.id!!,
       title = title,
       text = text,
       createdAt = createdAt

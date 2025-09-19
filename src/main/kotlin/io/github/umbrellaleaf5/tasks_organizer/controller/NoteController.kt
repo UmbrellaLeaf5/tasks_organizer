@@ -25,9 +25,16 @@ class NoteController(
       noteId != null -> noteService.getNoteById(noteId)
         ?: throw IllegalArgumentException("Note not found")
 
-      authorId != null && searchQuery != null -> noteService.searchNotes(searchQuery, authorId)
+      searchQuery != null -> {
+        if (authorId != null) {
+          noteService.searchNotes(searchQuery, authorId)
+        } else {
+          noteService.searchNotes(searchQuery)
+        }
+      }
+
       authorId != null -> noteService.getNotesByAuthorId(authorId)
-      else -> throw IllegalArgumentException("Either author_id, search with author_id, or id must be provided")
+      else -> throw IllegalArgumentException("Invalid search query param")
     }
   }
 

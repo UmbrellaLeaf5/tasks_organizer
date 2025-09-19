@@ -11,7 +11,14 @@ interface NoteRepository : JpaRepository<Note, Long> {
   fun findAllByAuthorId(authorId: Long): List<Note>
 
   @Query(
-    "SELECT n FROM Note n WHERE n.author = :authorId AND " +
+    "SELECT n FROM Note n WHERE " +
+            "(LOWER(n.title) LIKE LOWER(CONCAT('%', :query, '%')) OR " +
+            "LOWER(n.text) LIKE LOWER(CONCAT('%', :query, '%')))"
+  )
+  fun findBySearchQuery(@Param("query") query: String): List<Note>
+
+  @Query(
+    "SELECT n FROM Note n WHERE n.author.id = :authorId AND " +
             "(LOWER(n.title) LIKE LOWER(CONCAT('%', :query, '%')) OR " +
             "LOWER(n.text) LIKE LOWER(CONCAT('%', :query, '%')))"
   )
