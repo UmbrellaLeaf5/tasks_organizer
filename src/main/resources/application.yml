@@ -1,11 +1,52 @@
 server:
   port: 8080
   tomcat:
-    relaxed-query-chars: ["{", "}", "[", "]"]
+    relaxed-query-chars: [ "{", "}", "[", "]" ]
+
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: DEBUG
+        type:
+          descriptor:
+            sql:
+              BasicBinder: TRACE
 
 spring:
   application:
     name: tasks_organizer
+
+  datasource:
+    url: jdbc:postgresql://${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+      # ddl-auto: update # after dev only
+
+    show-sql: true
+    open-in-view: false
+
+    properties:
+      hibernate:
+        "[format_sql]": true
+        jdbc:
+          lob:
+            "[non_contextual_creation]": true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+      jakarta:
+        persistence:
+          validation:
+            mode: none
+
+  sql:
+    init:
+      mode: never
 
 management:
   server:
