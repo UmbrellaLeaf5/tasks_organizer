@@ -1,4 +1,4 @@
-package io.github.umbrellaleaf5.dto.response
+package io.github.umbrellaleaf5.tasks_organizer.dto.response
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import java.time.Instant
