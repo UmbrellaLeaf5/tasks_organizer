@@ -89,9 +89,9 @@
 }
 ```
 
-### `PATCH` note by `author_id`
+### `PATCH` note by `note_id`
 
-`/api/notes?author_id={author_id}`
+`/api/notes?id={note_id}`
 
 **Request Body**:
 
@@ -153,6 +153,21 @@
 `/api/users?id={user_id}`
 
 **Request Body**:
+
+```json
+{
+  "short_name": "ivanov",
+  "name": "Иванов Иван Иванович"
+}
+```
+
+### `PATCH` user by `user_id`
+
+`/api/users?id={user_id}`
+
+**Request Body**:
+
+(at least one field)
 
 ```json
 {
