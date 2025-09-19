@@ -3,26 +3,22 @@ package io.github.umbrellaleaf5.tasks_organizer.entity
 import jakarta.persistence.*
 
 @Entity
-@Table(
-  name = "users", uniqueConstraints = [
-    UniqueConstraint(columnNames = ["short_name"], name = "users_short_name_unique")
-  ]
-)
+@Table(name = "users")
 data class User(
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "users_seq")
+  @SequenceGenerator(
+    name = "users_seq",
+    sequenceName = "users_id_seq",
+    allocationSize = 50
+  )
   val id: Long? = null,
 
   @Column(name = "short_name", nullable = false)
   val shortName: String,
 
-  @Column(name = "name", nullable = false)
-  val name: String,
-
-  @OneToMany(mappedBy = "author", fetch = FetchType.LAZY)
-  val notes: MutableList<Note> = emptyList<Note>().toMutableList()
+  @Column(nullable = false)
+  val name: String
 ) {
-  override fun toString(): String {
-    return "User(id=$id, shortName='$shortName', name='$name')"
-  }
+  override fun toString() = "User(id=$id, shortName='$shortName')"
 }

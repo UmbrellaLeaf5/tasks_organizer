@@ -4,35 +4,29 @@ import jakarta.persistence.*
 import java.time.Instant
 
 @Entity
-@Table(
-  name = "notes", uniqueConstraints = [
-    UniqueConstraint(columnNames = ["title"], name = "notes_title_unique")
-  ]
-)
+@Table(name = "notes")
 data class Note(
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "notes_seq")
+  @SequenceGenerator(
+    name = "notes_seq",
+    sequenceName = "notes_id_seq",
+    allocationSize = 50
+  )
   val id: Long? = null,
 
-  @Column(name = "title", nullable = false)
+  @Column(nullable = false)
   val title: String,
 
-  @Column(name = "text", nullable = false)
-  val text: String = "\"\"",
+  @Column(nullable = false)
+  val text: String = "",
 
-  @Column(name = "created_at", nullable = false)
-  val createdAt: Instant,
+  @Column(name = "created_at", nullable = false, updatable = false)
+  val createdAt: Instant = Instant.now(),
 
   @ManyToOne(fetch = FetchType.LAZY, optional = false)
-  @JoinColumn(
-    name = "author_id",
-    referencedColumnName = "id",
-    nullable = false,
-    foreignKey = ForeignKey(name = "notes_author_id_foreign")
-  )
+  @JoinColumn(name = "author_id", nullable = false)
   val author: User
 ) {
-  override fun toString(): String {
-    return "Note(id=$id, title='$title', authorId=${author.id}, createdAt=$createdAt)"
-  }
+  override fun toString() = "Note(id=$id, title='$title')"
 }
