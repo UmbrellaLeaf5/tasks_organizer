@@ -4,6 +4,7 @@ import io.github.umbrellaleaf5.tasks_organizer.dto.request.NoteCreateRequest
 import io.github.umbrellaleaf5.tasks_organizer.dto.request.NoteUpdateRequest
 import io.github.umbrellaleaf5.tasks_organizer.dto.response.NoteResponse
 import io.github.umbrellaleaf5.tasks_organizer.entity.Note
+import io.github.umbrellaleaf5.tasks_organizer.exception.NotFoundException
 import io.github.umbrellaleaf5.tasks_organizer.repository.NoteRepository
 import io.github.umbrellaleaf5.tasks_organizer.repository.UserRepository
 import org.springframework.data.repository.findByIdOrNull
@@ -34,7 +35,9 @@ class NoteService(
 
   @Transactional
   fun createNote(authorId: Long, request: NoteCreateRequest) {
-    val author = userRepository.findByIdOrNull(authorId)
+    val author = userRepository.findById(authorId).orElseThrow {
+      NotFoundException("User not found with id $authorId")
+    }
 
     val note = Note(
       title = request.title,
@@ -47,7 +50,9 @@ class NoteService(
 
   @Transactional
   fun updateNote(noteId: Long, request: NoteUpdateRequest) {
-    val existingNote = noteRepository.findByIdOrNull(noteId)
+    val existingNote = noteRepository.findById(noteId).orElseThrow {
+      NotFoundException("Note not found with id $noteId")
+    }
 
     val updatedNote = Note(
       id = noteId,

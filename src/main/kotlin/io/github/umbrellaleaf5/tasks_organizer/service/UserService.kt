@@ -4,6 +4,7 @@ import io.github.umbrellaleaf5.tasks_organizer.dto.request.UserCreateRequest
 import io.github.umbrellaleaf5.tasks_organizer.dto.request.UserUpdateRequest
 import io.github.umbrellaleaf5.tasks_organizer.dto.response.UserResponse
 import io.github.umbrellaleaf5.tasks_organizer.entity.User
+import io.github.umbrellaleaf5.tasks_organizer.exception.NotFoundException
 import io.github.umbrellaleaf5.tasks_organizer.repository.UserRepository
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
@@ -34,7 +35,10 @@ class UserService(
 
   @Transactional
   fun updateUser(userId: Long, request: UserUpdateRequest) {
-    val existingUser = userRepository.findByIdOrNull(userId)
+    val existingUser =
+      userRepository.findById(userId).orElseThrow {
+        NotFoundException("User not found with id $userId")
+      }
 
     val updatedUser = User(
       id = userId,
