@@ -17,14 +17,16 @@ class GlobalExceptionHandler {
 
   @ExceptionHandler(NotFoundException::class)
   fun handleNotFoundException(ex: NotFoundException): ResponseEntity<ErrorResponse> {
-    logger.warn("Not found: {}", ex.message)
+    // logger.warn("Not found: {}", ex.message)
+
     return ResponseEntity.status(HttpStatus.NOT_FOUND)
       .body(ErrorResponse("Not Found", ex.message ?: "Resource not found"))
   }
 
   @ExceptionHandler(BadRequestException::class)
   fun handleBadRequestException(ex: BadRequestException): ResponseEntity<ErrorResponse> {
-    logger.warn("Bad request: {}", ex.message)
+    // logger.warn("Bad request: {}", ex.message)
+
     return ResponseEntity.status(HttpStatus.BAD_REQUEST)
       .body(ErrorResponse("Bad Request", ex.message ?: "Invalid request"))
   }
@@ -34,7 +36,9 @@ class GlobalExceptionHandler {
     val errors = ex.bindingResult.fieldErrors.joinToString {
       "${it.field}: ${it.defaultMessage}"
     }
-    logger.warn("Validation error: {}", errors)
+
+    // logger.warn("Validation error: {}", errors)
+
     return ResponseEntity.status(HttpStatus.BAD_REQUEST)
       .body(ErrorResponse("Validation Error", errors))
   }
@@ -42,13 +46,45 @@ class GlobalExceptionHandler {
   @ExceptionHandler(DataAccessException::class)
   fun handleDataAccessException(ex: DataAccessException): ResponseEntity<ErrorResponse> {
     logger.error("Database error: {}", ex.message, ex)
+
+    val errorDetail = buildDetailedErrorMessage(ex)
+
     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-      .body(ErrorResponse("Database Error", "An error occurred while accessing the database"))
+      .body(ErrorResponse("Database Error", errorDetail))
+  }
+
+  private fun buildDetailedErrorMessage(ex: DataAccessException): String {
+    val message = ex.message ?: ""
+
+    return when {
+      message.contains("unique", ignoreCase = true) &&
+              message.contains("constraint", ignoreCase = true) ->
+        "Unique constraint violation. This record already exists."
+
+      message.contains("duplicate", ignoreCase = true) &&
+              message.contains("key", ignoreCase = true) ->
+        "Duplicate key value. This record already exists."
+
+      message.contains("constraint", ignoreCase = true) ->
+        "Operation violates database constraints."
+
+      message.contains("null", ignoreCase = true) ->
+        "Required data is missing."
+
+      message.contains("timeout", ignoreCase = true) ->
+        "Database operation timed out. Please try again."
+
+      message.contains("connection", ignoreCase = true) ->
+        "Database connection issue occurred."
+
+      else -> "An unexpected database error occurred."
+    }
   }
 
   @ExceptionHandler(Exception::class)
   fun handleGenericException(ex: Exception): ResponseEntity<ErrorResponse> {
-    logger.error("Unexpected error: {}", ex.message, ex)
+    // logger.error("Unexpected error: {}", ex.message, ex)
+
     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
       .body(ErrorResponse("Internal Server Error", "An unexpected error occurred"))
   }
