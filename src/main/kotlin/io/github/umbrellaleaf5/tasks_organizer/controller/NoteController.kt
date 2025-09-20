@@ -2,7 +2,6 @@ package io.github.umbrellaleaf5.tasks_organizer.controller
 
 import io.github.umbrellaleaf5.tasks_organizer.dto.request.NoteCreateRequest
 import io.github.umbrellaleaf5.tasks_organizer.dto.request.NoteUpdateRequest
-import io.github.umbrellaleaf5.tasks_organizer.dto.response.NoteResponse
 import io.github.umbrellaleaf5.tasks_organizer.exception.BadRequestException
 import io.github.umbrellaleaf5.tasks_organizer.exception.NotFoundException
 import io.github.umbrellaleaf5.tasks_organizer.service.NoteService
@@ -45,8 +44,8 @@ class NoteController(
   fun createNote(
     @RequestParam("author_id") authorId: Long,
     @Valid @RequestBody request: NoteCreateRequest
-  ): NoteResponse {
-    return noteService.createNote(authorId, request)
+  ) {
+    noteService.createNote(authorId, request)
   }
 
   @PatchMapping
@@ -54,8 +53,8 @@ class NoteController(
   fun updateNote(
     @RequestParam("id") noteId: Long,
     @Valid @RequestBody request: NoteUpdateRequest
-  ): NoteResponse {
-    return noteService.updateNote(noteId, request)
+  ) {
+    noteService.updateNote(noteId, request)
   }
 
   @DeleteMapping

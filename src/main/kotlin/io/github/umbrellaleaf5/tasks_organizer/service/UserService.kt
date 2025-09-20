@@ -23,26 +23,26 @@ class UserService(
   }
 
   @Transactional
-  fun createUser(request: UserCreateRequest): UserResponse {
+  fun createUser(request: UserCreateRequest) {
     val newUser = User(
       shortName = request.shortName,
       name = request.name
     )
 
-    return userRepository.save(newUser).toResponse()
+    userRepository.save(newUser)
   }
 
   @Transactional
-  fun updateUser(userId: Long, request: UserUpdateRequest): UserResponse {
+  fun updateUser(userId: Long, request: UserUpdateRequest) {
     val existingUser = userRepository.findByIdOrNull(userId)
 
     val updatedUser = User(
       id = userId,
-      shortName = request.shortName ?: existingUser.shortName,
-      name = request.name ?: existingUser.name,
+      shortName = request.shortName ?: existingUser!!.shortName,
+      name = request.name ?: existingUser!!.name,
     )
 
-    return userRepository.save(updatedUser).toResponse()
+    userRepository.save(updatedUser)
   }
 
   @Transactional

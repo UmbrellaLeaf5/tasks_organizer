@@ -33,31 +33,31 @@ class NoteService(
   }
 
   @Transactional
-  fun createNote(authorId: Long, request: NoteCreateRequest): NoteResponse {
+  fun createNote(authorId: Long, request: NoteCreateRequest) {
     val author = userRepository.findByIdOrNull(authorId)
-    
+
     val note = Note(
       title = request.title,
       text = request.text,
       author = author
     )
 
-    return noteRepository.save(note).toResponse()
+    noteRepository.save(note)
   }
 
   @Transactional
-  fun updateNote(noteId: Long, request: NoteUpdateRequest): NoteResponse {
+  fun updateNote(noteId: Long, request: NoteUpdateRequest) {
     val existingNote = noteRepository.findByIdOrNull(noteId)
 
     val updatedNote = Note(
       id = noteId,
-      title = request.title ?: existingNote.title,
-      text = request.text ?: existingNote.text,
-      createdAt = existingNote.createdAt,
+      title = request.title ?: existingNote!!.title,
+      text = request.text ?: existingNote!!.text,
+      createdAt = existingNote!!.createdAt,
       author = existingNote.author
     )
 
-    return noteRepository.save(updatedNote).toResponse()
+    noteRepository.save(updatedNote)
   }
 
   @Transactional

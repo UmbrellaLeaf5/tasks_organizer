@@ -2,7 +2,6 @@ package io.github.umbrellaleaf5.tasks_organizer.controller
 
 import io.github.umbrellaleaf5.tasks_organizer.dto.request.UserCreateRequest
 import io.github.umbrellaleaf5.tasks_organizer.dto.request.UserUpdateRequest
-import io.github.umbrellaleaf5.tasks_organizer.dto.response.UserResponse
 import io.github.umbrellaleaf5.tasks_organizer.exception.NotFoundException
 import io.github.umbrellaleaf5.tasks_organizer.service.UserService
 import jakarta.validation.Valid
@@ -27,8 +26,8 @@ class UserController(
 
   @PostMapping
   @ResponseStatus(HttpStatus.OK)
-  fun createUser(@Valid @RequestBody request: UserCreateRequest): UserResponse {
-    return userService.createUser(request)
+  fun createUser(@Valid @RequestBody request: UserCreateRequest) {
+    userService.createUser(request)
   }
 
   @PatchMapping
@@ -36,8 +35,8 @@ class UserController(
   fun updateUser(
     @RequestParam("id") userId: Long,
     @Valid @RequestBody request: UserUpdateRequest
-  ): UserResponse {
-    return userService.updateUser(userId, request)
+  ) {
+    userService.updateUser(userId, request)
   }
 
   @DeleteMapping
